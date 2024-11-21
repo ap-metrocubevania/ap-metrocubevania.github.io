@@ -1,0 +1,169 @@
+﻿<html lang="en">
+
+<head>
+  <title>MetroCUBEvania</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <script src="static/js/pico-window.js"></script>
+  <link rel="stylesheet" href="static/css/styles.css">
+</head>
+
+<body class="d-flex justify-content-center" style="background-color:#222; color:#ccc">
+  <div id="body_0" style="width:540px">
+    <!-- hide this when playing in mobile (p8_touch_detected) so that elements don't affect layout -->
+
+
+    <!-- Add any content above the cart here -->
+
+
+    <div class="row" id="p8_frame_0" style="max-width:800px; max-height:800px; margin:auto;">
+      <!-- double function: limit size, and display only this div for touch devices -->
+      <div id="p8_frame" style="display:flex; width:100%; max-width:95vw; height:100vw; max-height:65vh; margin:auto;">
+
+        <div id="p8_menu_buttons_touch" style="position:absolute; width:100%; z-index:10; left:0px;">
+          <div class="p8_menu_button" id="p8b_full" style="float:left;margin-left:10px"
+            onClick="p8_give_focus(); p8_request_fullscreen();"></div>
+          <div class="p8_menu_button" id="p8b_sound" style="float:left;margin-left:10px"
+            onClick="p8_give_focus(); p8_create_audio_context(); Module.pico8ToggleSound();"></div>
+          <div class="p8_menu_button" id="p8b_close" style="float:right; margin-right:10px" onClick="p8_close_cart();">
+          </div>
+        </div>
+
+        <div id="p8_container" style="margin:auto; display:table;" onclick="p8_create_audio_context(); p8_run_cart();">
+
+          <div id="p8_start_button" class="p8_start_button" style="width:100%; height:100%; display:flex;">
+            <img width=80 height=80 style="margin:auto;"
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAABpklEQVR42u3au23DQBCEYUXOXIGKcujQXUgFuA0XIKgW90Q9oEAg+Ljd27vd2RsCf058gEDqhofPj+OB6SMCAQlIQAIyAhKQgARkBAQDnM6XSRsB7/2e/tSA0//12fCAKsQX3ntDA4oRFwBRIc0AixE38BAhTQGLEAsBUSDNAXcRhYDRIZsAPlp99VECRoXsDpgN0g0wC6Q7IDpkGEBUyG6A0+vKBtkdMBukG2AWSHdAdMgwgKiQ4QDRIMMCokCGB4wOCQPYFVKw2cABNocUjl6wgE0gFashPKAZpHJ2TQNYBVmxW6cDFENWDv9pAUshCVgJScBKSAISkD9hPkT4GkNAMdzepyj8Kye852EBLe51CZHHWQK4JcThD1SlcHPEYY/0a+A0n6SkGZV6w6WZNb3g4Id1b7hwgGhwYQBR4dwB0eHcALPAdQfMBhcOEA0uDCAqnDsgOpwbYBa4poA/31+rZYFrBriFpwGMCtcEcA9PAhgdzhywBK8EEQXOFFCCtwaIBmcGKMWbI6LCmQBq8R6hw5kAMgISkIAEJCAjIAEJSEBGQI9ukV7lRn9nD+gAAAAASUVORK5CYII=" />
+          </div>
+
+          <div id="p8_playarea"
+            style="display:none; margin:auto; -webkit-user-select:none; -moz-user-select: none; user-select: none; -webkit-touch-callout:none;">
+
+            <div id="touch_controls_background" style=" pointer-events:none; display:none; background-color:#000;
+                 position:fixed; top:0px; left:0px; border:0; width:100vw; height:100vh">
+              &nbsp
+            </div>
+
+            <div style="display:flex; position:relative">
+              <!-- pointer-events turned off for mobile in p8_update_layout because need for desktop mouse -->
+              <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault();">
+              </canvas>
+              <div class=p8_menu_buttons id="p8_menu_buttons" style="margin-left:10px;">
+                <div class="p8_menu_button" style="position:absolute; bottom:125px" id="p8b_controls"
+                  onClick="p8_give_focus(); Module.pico8ToggleControlMenu();">
+                </div>
+                <div class="p8_menu_button" style="position:absolute; bottom:90px" id="p8b_pause"
+                  onClick="p8_give_focus(); Module.pico8TogglePaused(); p8_update_layout_hash = -22;">
+                </div>
+                <div class="p8_menu_button" style="position:absolute; bottom:55px" id="p8b_sound"
+                  onClick="p8_give_focus(); p8_create_audio_context(); Module.pico8ToggleSound();">
+                </div>
+                <div class="p8_menu_button" style="position:absolute; bottom:20px" id="p8b_full"
+                  onClick="p8_give_focus(); p8_request_fullscreen();"></div>
+              </div>
+            </div>
+
+
+            <!-- display after first layout update -->
+            <div id="touch_controls_gfx" style=" pointer-events:none; display:table;
+                   position:fixed; top:0px; left:0px; border:0; width:100vw; height:100vh">
+              <img src="" id="controls_right_panel" style="position:absolute; opacity:0.5;">
+              <img src="" id="controls_left_panel" style="position:absolute;  opacity:0.5;">
+            </div> <!-- touch_controls_gfx -->
+
+            <!-- used for clipboard access & keyboard input; displayed and used by PICO-8 only once needed. can be safely removed if clipboard / key presses not needed. -->
+            <!-- (needs to be inside p8_playarea so that it still works under Chrome when fullscreened) -->
+            <!-- 0.2.5: added "display:none"; pico8.js shows on demand to avoid mac osx accent character selector // https://www.lexaloffle.com/bbs/?tid=47743 -->
+
+            <textarea id="codo_textarea" class="emscripten"
+              style="display:none; position:absolute; left:-9999px; height:0px; overflow:hidden"></textarea>
+
+          </div> <!--p8_playarea -->
+
+        </div> <!-- p8_container -->
+
+      </div> <!-- p8_frame -->
+    </div> <!-- p8_frame_0 size limit -->
+
+    <script type="text/javascript">
+
+      p8_update_layout();
+      p8_update_button_icons();
+
+      var canvas = document.getElementById("canvas");
+      Module = {};
+      Module.canvas = canvas;
+
+      // from @ultrabrite's shell: test if an AudioContext can be created outside of an event callback.
+      // If it can't be created, then require pressing the start button to run the cartridge
+
+      if (p8_autoplay) {
+        var temp_context = new AudioContext();
+        temp_context.onstatechange = function () {
+          if (temp_context.state == 'running') {
+            p8_run_cart();
+            temp_context.close();
+          }
+        };
+      }
+
+      // pointer lock request needs to be inside a canvas interaction event
+      // pico8_state.request_pointer_lock is true when 0x5f2d bit 0 and bit 2 are set -- poke(0x5f2d,0x5)
+      // note on mouse acceleration for future: // https://github.com/w3c/pointerlock/pull/49
+      canvas.addEventListener("click", function () {
+        if (!p8_touch_detected) {
+          if (pico8_state.request_pointer_lock) {
+            canvas.requestPointerLock();
+          }
+        }
+      });
+
+    </script>
+
+    <!-- end pico cart -->
+    <div class="toggle-login-form row mb-2 d-none">
+      <button type="button" class="btn btn-secondary btn-sm">Show/Hide Connection Details</button>
+    </div>
+    <div class="login-form row">
+      <form id="connection-details">
+        <div class="input-group input-group-sm mb-2">
+          <label class="input-group-text" for="hostname">Hostname:</label>
+          <input class="form-control" type="text" id="hostname" name="Hostname" value="archipelago.gg">
+        </div>
+
+        <div class="input-group input-group-sm mb-2">
+          <label class="input-group-text" for="port">Port:</label>
+          <input class="form-control" type="text" id="port" name="Port">
+        </div>
+
+        <div class="input-group input-group-sm mb-2">
+          <label class="input-group-text" for="slot-name">Name:</label>
+          <input class="form-control" type="text" id="slot-name" name="Name">
+        </div>
+
+        <div class="input-group input-group-sm mb-2">
+          <label class="input-group-text" for="password">Password:</label>
+          <input class="form-control" type="text" id="password" name="Password">
+        </div>
+
+        <div class="d-flex justify-content-start">
+          <button class="btn btn-primary me-3" type="submit">Submit</button>
+          <div class="status-wrapper align-content-around d-none">
+            <div class="status-connected d-none">Connected</div>
+            <div class="status-failed d-none">Connection Failed</div>
+            <div class="status-connecting d-none">Connecting...</div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script src="static/js/pico8-gpio-listener.js"></script>
+    <script src="static/js/client.js"></script>
+  </div>
+</body>
+
+</html>
